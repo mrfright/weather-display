@@ -1,0 +1,15 @@
+these icons look good
+https://erikflowers.github.io/weather-icons/
+
+use weather.gov api for lakewood
+https://api.weather.gov/points/41.4808,-81.8003
+
+should just be sure user agent has my info
+https://www.weather.gov/documentation/services-web-api
+
+
+
+this site suggests this
+curl -s https://www.moongiant.com/phase/today | grep "Illumination:"
+https://www.linuxjournal.com/content/current-phase-moon
+
