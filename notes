@@ -4,7 +4,19 @@ https://erikflowers.github.io/weather-icons/
 use weather.gov api for lakewood
 https://api.weather.gov/points/41.4808,-81.8003
 
+this seems for current weather
+https://api.weather.gov/gridpoints/CLE/79,63
+
 this site suggests this
 curl -s https://www.moongiant.com/phase/today | grep "Illumination:"
 https://www.linuxjournal.com/content/current-phase-moon
 
+some python picture lib PIL notes
+http://web.archive.org/web/20130115175340/http://nadiana.com/pil-tutorial-basic-advanced-drawing
+
+for converting svg to png 
+inkscape -z -e out.png -w 100 -h 100 in.svg
+
+
+using astral lib, install with
+pip3 install astral
