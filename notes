@@ -7,6 +7,10 @@ https://api.weather.gov/points/41.4808,-81.8003
 this seems for current weather
 https://api.weather.gov/gridpoints/CLE/79,63
 
+but I think I'll just use the first one here, just use detailed forcast
+all others are after using only short description
+https://api.weather.gov/gridpoints/CLE/79,63/forecast
+
 this site suggests this
 curl -s https://www.moongiant.com/phase/today | grep "Illumination:"
 https://www.linuxjournal.com/content/current-phase-moon
@@ -20,3 +24,4 @@ inkscape -z -e out.png -w 100 -h 100 in.svg
 
 using astral lib, install with
 pip3 install astral
+pip install requests

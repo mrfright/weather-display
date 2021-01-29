@@ -3,6 +3,14 @@ from PIL import Image, ImageFont, ImageDraw
 from font_fredoka_one import FredokaOne
 from datetime import date
 import textwrap
+import requests
+import json
+
+
+wgovres = requests.get("https://api.weather.gov/gridpoints/CLE/79,63/forecast")
+wgovjson = json.loads(wgovres.text)
+#print(wgovjson["properties"]['periods'][0])
+forcasts = wgovjson["properties"]['periods']
 
 inky_display = InkyWHAT("black")
 inky_display.set_border(inky_display.WHITE)
@@ -29,24 +37,13 @@ thermimgx = 95
 thermimgy = 20
 img.paste(thermimg, (thermimgx, thermimgy))
 
-humidimg = Image.open("/home/pi/weather-display/wi-humidity.png")
-humimgx = 95
-humimgy = 50
-img.paste(humidimg, (humimgx, humimgy))
-
-
 temphumfontsize = 25
 temphumfont = ImageFont.truetype(FredokaOne, temphumfontsize)
 
 tempvalx = 130
 tempvaly = 25
-tempvalstr = "37°"
+tempvalstr = str(forcasts[0]['temperature']) + "°"
 draw.text((tempvalx, tempvaly), tempvalstr, inky_display.BLACK, temphumfont)
-
-humvalx = 130
-humvaly = 55
-humvalstr = "72%"
-draw.text((humvalx, humvaly), humvalstr, inky_display.BLACK, temphumfont)
 
 # sun rise and set
 sunriseimg = Image.open("/home/pi/weather-display/wi-sunrise.png")
@@ -79,13 +76,19 @@ moony = 240
 img.paste(sunsetimg, (moonx, moony))
 
 # current detailed forcast
-current_detailed = "A chance of snow showers before noon. Mostly cloudy, with a high near 23. Northwest wind around 14 mph. Chance of precipitation is 50%. New snow accumulation of less than one inch possible."
+# if details about this long:
+# "Partly sunny, with a high near 26. Northwest wind 9 to 13 mph"
+# then double font? font size 20, width 20
+# else if about this long (that seems about max)
+# "Snow likely after 7pm. Cloudy, with a low around 27. Southeast wind 8 to 12 mph. Chance of precipitation is 70%. New snow accumulation of less than one inch possible."
+#then font size should stay about 13, width 35
+current_detailed = forcasts[0]['detailedForecast']
 
-curdetailfontsize = 13
+curdetailfontsize = 20
 curdetailfont = ImageFont.truetype(FredokaOne, curdetailfontsize)
 
 
-lines = textwrap.wrap(current_detailed, width=35)
+lines = textwrap.wrap(current_detailed, width=20)
 curdetailx = 0
 curdetaily = 100
 currentwidth, currentheight = curdetailfont.getsize(current_detailed)
@@ -102,14 +105,14 @@ img.paste(forcastimg, (forcastimgx, forcastimgy))
 
 forcastdaysize = 18
 forcastdayfont = ImageFont.truetype(FredokaOne, forcastdaysize)
-forcastdaymsg = "Tonight"
+forcastdaymsg = forcasts[1]['name']
 forcastdayx = 260
 forcastdayy = 0
 draw.text((forcastdayx, forcastdayy), forcastdaymsg, inky_display.BLACK, forcastdayfont)
 
 forcastdetailsize = 13
 forcastdetailfont = ImageFont.truetype(FredokaOne, forcastdetailsize)
-forcastdetailmsg = "Mostly Cloudy then Slight Chance Snow Showers"
+forcastdetailmsg = forcasts[1]['shortForecast']
 forcastdetailx = 210
 forcastdetaily = 50
 
@@ -119,8 +122,10 @@ for line in lines:
     draw.text((forcastdetailx, forcastdetaily), line, inky_display.BLACK, forcastdetailfont)
     forcastdetaily += forcastdetailheight
 
-
-
+forcastdetailtemp = str(forcasts[1]['temperature'])+"°"
+forcastdetailtempx = 260
+forcastdetailtempy = 22
+draw.text((forcastdetailtempx, forcastdetailtempy), forcastdetailtemp, inky_display.BLACK, forcastdayfont)
 
 
 
