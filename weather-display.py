@@ -32,17 +32,12 @@ curwimgx = 0
 curwimgy = 20
 img.paste(currentweatherimg, (curwimgx, curwimgy))
 
-# current temp and humidity
-thermimg = Image.open("/home/pi/weather-display/wi-thermometer.png")
-thermimgx = 95
-thermimgy = 20
-img.paste(thermimg, (thermimgx, thermimgy))
-
-temphumfontsize = 25
+# current temp 
+temphumfontsize = 40
 temphumfont = ImageFont.truetype(FredokaOne, temphumfontsize)
 
-tempvalx = 130
-tempvaly = 25
+tempvalx = 100
+tempvaly = 30
 tempvalstr = str(forcasts[0]['temperature']) + "°"
 draw.text((tempvalx, tempvaly), tempvalstr, inky_display.BLACK, temphumfont)
 
@@ -63,7 +58,6 @@ today_ss = sunt.get_local_sunset_time()
 sunrtimex = 55
 sunrtimey = 230
 sunrtimestr = today_sr.strftime('%-I:%M %p')
-print(sunrtimestr)
 draw.text((sunrtimex, sunrtimey), sunrtimestr, inky_display.BLACK, sunfont)
 
 sunsetimg = Image.open("/home/pi/weather-display/wi-sunset.png")
@@ -74,7 +68,6 @@ img.paste(sunsetimg, (sunsimgx, sunsimgy))
 sunstimex = 55
 sunstimey = 262
 sunstimestr = today_ss.strftime('%-I:%M %p')
-print(sunstimestr)
 draw.text((sunstimex, sunstimey), sunstimestr, inky_display.BLACK, sunfont)
 
 # moon phase
@@ -93,11 +86,18 @@ img.paste(sunsetimg, (moonx, moony))
 #then font size should stay about 13, width 35
 current_detailed = forcasts[0]['detailedForecast']
 
+# if under 70 chars, size 20, width 20
+# else larger, use about font 13, width 35
 curdetailfontsize = 20
+curdetailwidth = 20
+if len(current_detailed) > 70:
+    curdetailfontsize = 13
+    curdetailwidth = 30
+
 curdetailfont = ImageFont.truetype(FredokaOne, curdetailfontsize)
 
 
-lines = textwrap.wrap(current_detailed, width=20)
+lines = textwrap.wrap(current_detailed, width=curdetailwidth)
 curdetailx = 0
 curdetaily = 100
 currentwidth, currentheight = curdetailfont.getsize(current_detailed)
