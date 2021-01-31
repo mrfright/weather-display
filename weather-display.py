@@ -1,6 +1,7 @@
 from inky import InkyWHAT
 from PIL import Image, ImageFont, ImageDraw
 from font_fredoka_one import FredokaOne
+import datetime
 from datetime import date
 import textwrap
 import requests
@@ -69,6 +70,10 @@ sunstimex = 55
 sunstimey = 262
 sunstimestr = today_ss.strftime('%-I:%M %p')
 draw.text((sunstimex, sunstimey), sunstimestr, inky_display.BLACK, sunfont)
+
+print(datetime.datetime.now().strftime('%Y-%m-%d %H:%M'))
+updatefont = ImageFont.truetype(FredokaOne, 10)
+draw.text((55, 290), 'updated: ' + datetime.datetime.now().strftime('%Y-%m-%d %H:%M'), inky_display.BLACK, updatefont)
 
 # moon phase
 sunsetimg = Image.open("/home/pi/weather-display/wi-moon-alt-waxing-gibbous-2.png")

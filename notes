@@ -31,3 +31,9 @@ suntime for sun rise/set (because that uses time type which can be formatted)
 pip3 install astral
 pip install requests
 pip3 install suntime
+
+
+add cron job
+crontab -e
+select editor (imma use nano)
+0 * * * * /usr/bin/python /home/pi/opencleart/opencleart.py > /home/pi/opencleart/cronout 2>&1
