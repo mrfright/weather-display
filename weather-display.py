@@ -5,7 +5,8 @@ from datetime import date
 import textwrap
 import requests
 import json
-
+from astral import LocationInfo
+from suntime import Sun, SunTimeException
 
 wgovres = requests.get("https://api.weather.gov/gridpoints/CLE/79,63/forecast")
 wgovjson = json.loads(wgovres.text)
@@ -54,9 +55,15 @@ img.paste(sunriseimg, (sunrimgx, sunrimgy))
 sunfontsize = 20
 sunfont = ImageFont.truetype(FredokaOne, sunfontsize)
 
+sunt = Sun(41.4808,-81.8003)
+
+today_sr = sunt.get_local_sunrise_time()
+today_ss = sunt.get_local_sunset_time()
+
 sunrtimex = 55
 sunrtimey = 230
-sunrtimestr = "8:08 AM"
+sunrtimestr = today_sr.strftime('%-I:%M %p')
+print(sunrtimestr)
 draw.text((sunrtimex, sunrtimey), sunrtimestr, inky_display.BLACK, sunfont)
 
 sunsetimg = Image.open("/home/pi/weather-display/wi-sunset.png")
@@ -66,7 +73,8 @@ img.paste(sunsetimg, (sunsimgx, sunsimgy))
 
 sunstimex = 55
 sunstimey = 262
-sunstimestr = "4:37 PM"
+sunstimestr = today_ss.strftime('%-I:%M %p')
+print(sunstimestr)
 draw.text((sunstimex, sunstimey), sunstimestr, inky_display.BLACK, sunfont)
 
 # moon phase
@@ -81,6 +89,7 @@ img.paste(sunsetimg, (moonx, moony))
 # then double font? font size 20, width 20
 # else if about this long (that seems about max)
 # "Snow likely after 7pm. Cloudy, with a low around 27. Southeast wind 8 to 12 mph. Chance of precipitation is 70%. New snow accumulation of less than one inch possible."
+# "A chance of snow before 7pm, then a chance of snow showers. Cloudy, with a low around 25. North wind 13 to 18 mph. Chance of precipitation is 50%. New snow accumulation of around one inch possible."
 #then font size should stay about 13, width 35
 current_detailed = forcasts[0]['detailedForecast']
 
@@ -98,35 +107,41 @@ for line in lines:
 
 
 # later forcast
-forcastimg = Image.open("/home/pi/weather-display/wi-snow.png")
 forcastimgx = 210
-forcastimgy = 0
-img.paste(forcastimg, (forcastimgx, forcastimgy))
+#forcastimgy = 0
 
 forcastdaysize = 18
 forcastdayfont = ImageFont.truetype(FredokaOne, forcastdaysize)
-forcastdaymsg = forcasts[1]['name']
 forcastdayx = 260
-forcastdayy = 0
-draw.text((forcastdayx, forcastdayy), forcastdaymsg, inky_display.BLACK, forcastdayfont)
+#forcastdayy = 0
 
 forcastdetailsize = 13
 forcastdetailfont = ImageFont.truetype(FredokaOne, forcastdetailsize)
-forcastdetailmsg = forcasts[1]['shortForecast']
 forcastdetailx = 210
-forcastdetaily = 50
+#forcastdetaily = 50
 
-lines = textwrap.wrap(forcastdetailmsg, width=30)
-forcastdetailwidth, forcastdetailheight = forcastdetailfont.getsize(forcastdetailmsg)
-for line in lines:
-    draw.text((forcastdetailx, forcastdetaily), line, inky_display.BLACK, forcastdetailfont)
-    forcastdetaily += forcastdetailheight
-
-forcastdetailtemp = str(forcasts[1]['temperature'])+"°"
 forcastdetailtempx = 260
-forcastdetailtempy = 22
-draw.text((forcastdetailtempx, forcastdetailtempy), forcastdetailtemp, inky_display.BLACK, forcastdayfont)
+#forcastdetailtempy = 22
+#draw.text((forcastdetailtempx, forcastdetailtempy), forcastdetailtemp, inky_display.BLACK, forcastdayfont)
 
+forcastyoffset = 75
+for x in range(0, 4):
+    forcastimg = Image.open("/home/pi/weather-display/wi-snow.png")
+    forcastimgy = x*forcastyoffset
+    img.paste(forcastimg, (forcastimgx, forcastimgy))
+    forcastdaymsg = forcasts[x+1]['name']
+    forcastdayy = x*forcastyoffset
+    draw.text((forcastdayx, forcastdayy), forcastdaymsg, inky_display.BLACK, forcastdayfont)
+    forcastdetailmsg = forcasts[x+1]['shortForecast']
+    lines = textwrap.wrap(forcastdetailmsg, width=30)
+    forcastdetailwidth, forcastdetailheight = forcastdetailfont.getsize(forcastdetailmsg)
+    forcastdetaily = 48+(x*forcastyoffset)
+    for line in lines:
+        draw.text((forcastdetailx, forcastdetaily), line, inky_display.BLACK, forcastdetailfont)
+        forcastdetaily += forcastdetailheight
+    forcastdetailtemp = str(forcasts[x+1]['temperature'])+"°"
+    forcastdetailtempy = 22 + (x*forcastyoffset)
+    draw.text((forcastdetailtempx, forcastdetailtempy), forcastdetailtemp, inky_display.BLACK,forcastdayfont)
 
 
 inky_display.set_image(img)

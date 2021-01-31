@@ -1,3 +1,6 @@
+installed inky stuff following this
+https://learn.pimoroni.com/tutorial/sandyj/getting-started-with-inky-what
+
 these icons look good
 https://erikflowers.github.io/weather-icons/
 
@@ -22,6 +25,9 @@ for converting svg to png
 inkscape -z -e out.png -w 100 -h 100 in.svg
 
 
-using astral lib, install with
+using astral lib for moon
+requests for web api
+suntime for sun rise/set (because that uses time type which can be formatted)
 pip3 install astral
 pip install requests
+pip3 install suntime
