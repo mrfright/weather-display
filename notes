@@ -37,3 +37,13 @@ add cron job
 crontab -e
 select editor (imma use nano)
 0 * * * * /usr/bin/python /home/pi/opencleart/opencleart.py > /home/pi/opencleart/cronout 2>&1
+
+
+take note of 
+startTime	"2021-02-04T13:00:00-05:00"
+endTime	"2021-02-04T18:00:00-05:00"
+
+in first/current forecast
+if current time is after that end time, update
+
+also need to get things like email and app name in request headers as curtesy to the weather api

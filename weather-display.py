@@ -9,7 +9,11 @@ import json
 from astral import LocationInfo
 from suntime import Sun, SunTimeException
 
-wgovres = requests.get("https://api.weather.gov/gridpoints/CLE/79,63/forecast")
+headers = {
+    'User-Agent': 'faehnri.ch, eric@faehnri.ch',
+}
+
+wgovres = requests.get("https://api.weather.gov/gridpoints/CLE/79,63/forecast", headers=headers)
 wgovjson = json.loads(wgovres.text)
 #print(wgovjson["properties"]['periods'][0])
 forcasts = wgovjson["properties"]['periods']
